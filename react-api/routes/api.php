@@ -19,6 +19,6 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::match(['get', 'post'], 'api/user/list', 'UserController@liste');
-Route::match(['get', 'post'], 'api/user/create', 'UserController@create');
+Route::match(['get', 'post'], 'user/list', 'UserController@liste');
+Route::match(['get', 'post'], 'user/create', 'UserController@create');
 

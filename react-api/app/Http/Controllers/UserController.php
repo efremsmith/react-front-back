@@ -16,21 +16,22 @@ class UserController extends Controller
     }
 
     public function create(Request $request){
-       
-        $name = $request->firstName;
-        $email = $request->lastName;
+        $fields = $request->validate([
+            'firstName' => 'required|string',
+            'lastName' => 'required|string',
+        ]);
 
         try{
             $user = new User();
-            $user->name = $name;
-            $user->email = $email;
-            $user->password = "tulesaime";
+            $user->name = $fields['firstName'];
+            $user->email = $fields['lastName'];
+            $user->password = "fdgdfg";
             $user->save();
-
-           return new JsonResponse(['success' => true, 'body' => [$email,$name,$_POST] ,'message' => "Enregistrement effectuer avec success",'status' => 200]);
+            $users = User::all();
+           return new JsonResponse(['success' => true, 'body' => ['users' => $users,$request] ,'message' => "Enregistrement effectuer avec success",'status' => 200]);
 
         }catch (Exception $e) { 
-            return new JsonResponse(['success' => false,'body' => [$email,$name,$_POST,$request,$e] ,'message' => 'Erreur lors de l\'enregistrement', 'status' => 400]);                        
+            return new JsonResponse(['success' => false,'body' => [$fields] ,'message' => 'Erreur lors de l\'enregistrement', 'status' => 400]);                        
         }
     }
 }

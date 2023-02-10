@@ -4,6 +4,7 @@ import Blogs from './blogs.jsx';
 import axios from 'axios';
 
 export default function Events() {
+
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [checkbox, setCheckbox] = useState(false);
@@ -13,7 +14,6 @@ export default function Events() {
     const buttonElement = useRef(null);
     const [message, setMessage] = useState("");
     const [posts, setPosts] = useState([]);
-
 
     useEffect(() => {
         axios.get('http://localhost:8001/api/user/list')
@@ -27,9 +27,17 @@ export default function Events() {
         });
     },[]);
 
-    
+    const headers = {
+        'Access-Control-Allow-Credentials':true,
+        'Access-Control-Allow-Headers':'Origin,Content-Type,Authorization,X-Requested-With,Content-Range,X-Auth-Token,Content-Disposition,Content-Description,X-Xsrf-Token,ip',
+        'Access-Control-Allow-Origin': '*,http://localhost:8001',
+        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Access-control-Max-Age': '1728000',
+        'Authorization': 'JWT fefege...'
+    };
 
-    const postData = async (e) => {
+    let postData = async (e) => {
         setTitreForm('Envoi du Formulaire');
         setBoutton('Envoi en cours');
         setIsDisabled(!isDisabled);
@@ -40,24 +48,35 @@ export default function Events() {
             firstName: firstName,
             lastName: lastName,
         }; 
-        
+
+        /*axios.post("http://localhost:8001/api/user/creates",{
+            headers: headers,
+            title: "Hello World!",
+            body: "This is a new post."
+            //body : JSON.stringify(mesDonnees),
+        })
+        .then(function (reponse) {
+            //On traite la suite une fois la réponse obtenue 
+            console.log(reponse);
+        })
+        .catch(function (erreur) {
+            //On traite ici les erreurs éventuellement survenues
+            console.log(erreur);
+        });*/
+
         try {
             
-            const fetchOptions = {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json',
-                },
-                body: JSON.stringify(mesDonnees),
-            }
-            const res = await fetch('http://127.0.0.1:8001/api/user/create', fetchOptions)
-    
-            const data = await res.json()
-            //console.log(data.body.users);
-            setPosts(data.body.users)
-
-    
+            let res = await fetch("http://127.0.0.1:8001/api/user/create", {
+                method: "POST",
+                body: JSON.stringify({
+                    firstName: firstName,
+                    lastName: lastName,
+                }),
+            });
+           
+            let resJson = await res.json();
             if (res.status === 200) {
+                setIsDisabled(isDisabled)
                 setFirstName("");
                 setLastName("");
                 setCheckbox("");
@@ -66,13 +85,12 @@ export default function Events() {
                 setBoutton("Envoyer");
                 setMessage("User created successfully");
             } else {
-                
+                setIsDisabled(isDisabled)
                 setMessage("Some error occured");
             };
             
-            
           } catch (err) {
-            
+            setIsDisabled(isDisabled)
             console.log(err);
           }
           setIsDisabled(isDisabled);
