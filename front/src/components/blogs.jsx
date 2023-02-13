@@ -19,15 +19,11 @@ export default function Blogs(props) {
 						<th scope="row">{post.id}</th>
 						<td>{post.name}</td>
 						<td>{post.email}</td>
-						<td>{post.password}</td>
+						<td>
+							<button className='bouttonSubmit'> Modifier </button>
+						</td>
 					</tr>
 				))}
-				<tr>
-					<th scope="row"></th>
-					<td>Mark</td>
-					<td>Otto</td>
-					<td>@mdo</td>
-				</tr>
 
 			</tbody>
 		</table></>
